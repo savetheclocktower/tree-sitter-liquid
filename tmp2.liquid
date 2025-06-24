@@ -1,0 +1,16 @@
+{%- unless foo == empty -%}
+
+{%- endunless -%}
+
+{% assign kitchen_products = products | where: "type", "kitchen" %}
+{{ "/my/fancy/url" | append: ".html" }}
+{% assign my_variable = "apples" %}
+{% render "name", my_variable: my_variable, my_other_variable: "oranges" %}
+
+
+{% for something in (1..i) %}
+<li>{{foo}}</li>
+{% endfor %}
+
+{% for something in (1..5) %}
+{% endfor %}

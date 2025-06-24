@@ -1,40 +1,53 @@
-# We are using this .gitignore file to default to blocking everything and explicitly allowing things we want.
-*
-!*/
+# Rust artifacts
+target/
 
-node_modules
+# Node artifacts
+build/
+prebuilds/
+node_modules/
 
-# Allow tracking of .gitignore
-!.gitignore
+# Swift artifacts
+.build/
 
-# Allow tracking of .github workflows configuration
-!.github/**
+# Go artifacts
+_obj/
 
-# Grammar description file
-!grammar.js
+# Python artifacts
+.venv/
+dist/
+*.egg-info
+*.whl
 
-# Track the queries directory
-!queries/**
+# C artifacts
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.pc
+*.exp
+*.lib
 
-# Track packaging files
-!package.json
-!Cargo.toml
+# Zig artifacts
+.zig-cache/
+zig-cache/
+zig-out/
 
-# Track the project readme and software license
-!README.md
-!LICENSE
+# Example dirs
+/examples/*/
+/.tests/
 
-# Track test files
-!test/**/*
+# Grammar volatiles
+*.wasm
+*.obj
+*.o
 
-# Track the generated bindings directory
-!bindings/**
+# Archives
+*.tar.gz
+*.tgz
+*.zip
 
-# Track the binding.gyp file
-!binding.gyp
-
-# Track the generated tree-sitter source files
-!src/**
-
-# Track the VERSION file
-!VERSION
+# Other stuff
+*.log
+.envrc
+sample.liquid

@@ -1,0 +1,39 @@
+{% for i in (1..5) %}
+  {% if i == 4 %}
+    {% break %}
+  {% else %}
+    {{ i }}
+  {% endif %}
+{% endfor %}
+
+{% for product in collection.products %}
+  {{ product.title }}
+{% else %}
+  The collection is empty.
+{% endfor %}
+
+{% assign handle = "cake" %}
+{% case handle %}
+  {% when "cake" %}
+     This is a cake
+  {% when "cookie", "biscuit" %}
+     This is a cookie
+  {% else %}
+     This is not a cake nor a cookie
+{% endcase %}
+
+{% if customer.name == "kevin" %}
+  Hey Kevin!
+{% elsif customer.name == "anonymous" %}
+  Hey Anonymous!
+{% else %}
+  Hi Stranger!
+{% endif %}
+
+{% if product.title == "Awesome Shoes" %}
+  These shoes are awesome!
+{% endif %}
+
+{% for item in sequence %}
+  <li>{{item}}</li>
+{% endfor %}
