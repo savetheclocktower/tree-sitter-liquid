@@ -1,32 +1,18 @@
-<h1 align="center">tree-sitter-liquid🌴🪑💧</h1>
-<div align="center">
+# tree-sitter-liquid
 
-[![License](https://img.shields.io/github/license/adamazing/tree-sitter-liquid?label=License)](LICENSE "MIT")
-[![Latest release)](https://img.shields.io/github/v/tag/adamazing/tree-sitter-liquid?logo=SemVer&include_prereleases&label=Release)](releases)
-[![Main branch test status](https://img.shields.io/github/actions/workflow/status/adamazing/tree-sitter-liquid/test.yml?event=push&logo=githubactions&logoColor=rgb(255%2C255%2C255)&label=Build)](actions/workflows/test.yml?query=event%3Apush)
+A [Tree-sitter][] parser for [Liquid templates][Liquid].
 
-</div>
+## What’s supported?
 
-## Intro
-This is a from-scratch implementation of a tree-sitter parser for the Liquid templating language.
+Nearly anything documented on either [Shopify’s Liquid site][Liquid] or the [LiquidJS site][LiquidJS].
 
-## Goals
-🏆 A comprehensive description of Liquid grammar  
-🏆 Tests for all language rules  
-🏆 Tests for all code snippets in Shopify Liquid/Jekyll Liquid docs  
-🏆 Highlight queries  
-🏆 Tests for highlighting queries  
-🏆 Fold queries  
-🏆 Injection (and therefore highlighting) of HTML  
-🏆 Indent queries  
-🏆 Locals queries (and highlights)  
-  
-## Resources
+## What isn’t (yet) supported?
 
-[Tree-sitter](https://github.com/tree-sitter/tree-sitter), and its amazing grammar parsing [documentation](https://tree-sitter.github.io/tree-sitter/).  
-[Shopify's](https://shopify.github.io/) Liquid templating language [documentation](https://shopify.github.io/liquid/basics/introduction/).  
-[Jekyll's](https://jekyllrb.com/) documentation of [their additions](https://jekyllrb.com/docs/liquid/) to the Liquid templating language.  
+* [Jekyll’s custom tags](https://jekyllrb.com/docs/liquid/tags/) are not implemented. Custom tags are annoying because it’s impossible to know how to highlight them; there is no standard for the content after the tag name. I’ll eventually add these and also add some sort of fallback mode for tags that aren’t recognized but seem valid.
+* [Jekyll-like filenames](https://liquidjs.com/tags/render.html#Jekyll-like-Filenames) in `render` tags.
+* Escape sequences are properly recognized within strings, but [Liquid within Liquid strings](https://liquidjs.com/tags/render.html#Outputs-amp-Filters) is not parsed or highlighted. It’s parsed as an ordinary string value with no special meaning.
+* [Liquid Drops](https://liquidjs.com/tutorials/drops.html) have no special meaning — not even the ones that are active by default. They’ll all be interpreted as ordinary identifiers (as they would be if the drop were not active). If you want special syntax highlighting, you can likely highlight them in your editor of choice via a `#match?` query.
 
-## Support
-
-If you've found this useful, please star the repository and consider sponsoring me, for any amount, to help support the open source ecosystem.
+[Tree-sitter]: https://tree-sitter.github.io/tree-sit
+[Liquid]: https://shopify.github.io/liquid/
+[LiquidJS]: https://liquidjs.com/index.html
