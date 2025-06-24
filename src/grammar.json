@@ -78,6 +78,15 @@
           "name": "echo_directive"
         },
         {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_line_comment_directive"
+          },
+          "named": true,
+          "value": "comment_directive"
+        },
+        {
           "type": "SYMBOL",
           "name": "increment_directive"
         },
@@ -92,10 +101,6 @@
         {
           "type": "SYMBOL",
           "name": "layout_directive"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "directive"
         }
       ]
     },
@@ -158,6 +163,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "comment"
+        },
+        {
+          "type": "SYMBOL",
           "name": "liquid_for_block"
         },
         {
@@ -174,7 +183,7 @@
         }
       ]
     },
-    "directive": {
+    "_line_comment_directive": {
       "type": "SEQ",
       "members": [
         {
@@ -191,14 +200,28 @@
           ]
         },
         {
-          "type": "CHOICE",
+          "type": "SEQ",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "_code"
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_line_comment_in_comment_directive"
+              },
+              "named": true,
+              "value": "comment"
             },
             {
-              "type": "BLANK"
+              "type": "REPEAT",
+              "content": {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_line_comment"
+                },
+                "named": true,
+                "value": "comment"
+              }
             }
           ]
         },
@@ -2342,29 +2365,8 @@
       ]
     },
     "comment": {
-      "type": "TOKEN",
-      "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "{%"
-              },
-              {
-                "type": "PATTERN",
-                "value": "\\s#"
-              },
-              {
-                "type": "PATTERN",
-                "value": "[^%-]+"
-              }
-            ]
-          }
-        ]
-      }
+      "type": "SYMBOL",
+      "name": "_line_comment"
     },
     "_code": {
       "type": "REPEAT1",
@@ -3350,6 +3352,14 @@
     {
       "type": "SYMBOL",
       "name": "_block_comment_content"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_line_comment"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_line_comment_in_comment_directive"
     },
     {
       "type": "SYMBOL",

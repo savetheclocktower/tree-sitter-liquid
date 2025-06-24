@@ -202,6 +202,10 @@
           "named": true
         },
         {
+          "type": "comment_directive",
+          "named": true
+        },
+        {
           "type": "content",
           "named": true
         },
@@ -211,10 +215,6 @@
         },
         {
           "type": "decrement_directive",
-          "named": true
-        },
-        {
-          "type": "directive",
           "named": true
         },
         {
@@ -326,6 +326,10 @@
           "named": true
         },
         {
+          "type": "comment_directive",
+          "named": true
+        },
+        {
           "type": "content",
           "named": true
         },
@@ -335,10 +339,6 @@
         },
         {
           "type": "decrement_directive",
-          "named": true
-        },
-        {
-          "type": "directive",
           "named": true
         },
         {
@@ -444,6 +444,10 @@
           "named": true
         },
         {
+          "type": "comment_directive",
+          "named": true
+        },
+        {
           "type": "content",
           "named": true
         },
@@ -453,10 +457,6 @@
         },
         {
           "type": "decrement_directive",
-          "named": true
-        },
-        {
-          "type": "directive",
           "named": true
         },
         {
@@ -538,6 +538,11 @@
     }
   },
   {
+    "type": "comment",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "comment_block",
     "named": true,
     "fields": {},
@@ -563,7 +568,17 @@
   {
     "type": "comment_directive",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "content",
@@ -606,49 +621,6 @@
       "types": [
         {
           "type": "identifier",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "directive",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "binary_expression",
-          "named": true
-        },
-        {
-          "type": "boolean",
-          "named": true
-        },
-        {
-          "type": "empty",
-          "named": true
-        },
-        {
-          "type": "filtered_value",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "number",
-          "named": true
-        },
-        {
-          "type": "selector_expression",
-          "named": true
-        },
-        {
-          "type": "string",
           "named": true
         }
       ]
@@ -919,6 +891,10 @@
           "named": true
         },
         {
+          "type": "comment_directive",
+          "named": true
+        },
+        {
           "type": "content",
           "named": true
         },
@@ -928,10 +904,6 @@
         },
         {
           "type": "decrement_directive",
-          "named": true
-        },
-        {
-          "type": "directive",
           "named": true
         },
         {
@@ -1060,6 +1032,10 @@
           "named": true
         },
         {
+          "type": "comment_directive",
+          "named": true
+        },
+        {
           "type": "content",
           "named": true
         },
@@ -1069,10 +1045,6 @@
         },
         {
           "type": "decrement_directive",
-          "named": true
-        },
-        {
-          "type": "directive",
           "named": true
         },
         {
@@ -1442,6 +1414,10 @@
       "required": true,
       "types": [
         {
+          "type": "comment",
+          "named": true
+        },
+        {
           "type": "liquid_assign_statement",
           "named": true
         },
@@ -1538,6 +1514,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
         {
           "type": "liquid_assign_statement",
           "named": true
@@ -1701,6 +1681,10 @@
       "required": true,
       "types": [
         {
+          "type": "comment",
+          "named": true
+        },
+        {
           "type": "liquid_assign_statement",
           "named": true
         },
@@ -1803,6 +1787,10 @@
         },
         {
           "type": "boolean",
+          "named": true
+        },
+        {
+          "type": "comment",
           "named": true
         },
         {
@@ -2078,6 +2066,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
         {
           "type": "liquid_assign_statement",
           "named": true
@@ -2524,6 +2516,10 @@
           "named": true
         },
         {
+          "type": "comment_directive",
+          "named": true
+        },
+        {
           "type": "content",
           "named": true
         },
@@ -2533,10 +2529,6 @@
         },
         {
           "type": "decrement_directive",
-          "named": true
-        },
-        {
-          "type": "directive",
           "named": true
         },
         {
@@ -2737,6 +2729,10 @@
           "named": true
         },
         {
+          "type": "comment_directive",
+          "named": true
+        },
+        {
           "type": "content",
           "named": true
         },
@@ -2746,10 +2742,6 @@
         },
         {
           "type": "decrement_directive",
-          "named": true
-        },
-        {
-          "type": "directive",
           "named": true
         },
         {
@@ -2832,6 +2824,10 @@
           "named": true
         },
         {
+          "type": "comment_directive",
+          "named": true
+        },
+        {
           "type": "content",
           "named": true
         },
@@ -2841,10 +2837,6 @@
         },
         {
           "type": "decrement_directive",
-          "named": true
-        },
-        {
-          "type": "directive",
           "named": true
         },
         {
@@ -3083,10 +3075,6 @@
   {
     "type": "comment",
     "named": false
-  },
-  {
-    "type": "comment",
-    "named": true
   },
   {
     "type": "contains",

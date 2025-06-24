@@ -14,6 +14,8 @@
 typedef enum TokenType {
   RAW_CONTENT,
   BLOCK_COMMENT_CONTENT,
+  LINE_COMMENT,
+  LINE_COMMENT_IN_COMMENT_DIRECTIVE,
   ERROR_SENTINEL
 } TokenType;
 
@@ -104,6 +106,53 @@ static bool scan_for_directive(TSLexer *lexer, const char *directive_name) {
   return true;
 }
 
+static bool scan_for_line_comment(TSLexer *lexer, bool enforce_new_line) {
+  PRINTF("In scan_for_line_comment\n");
+  if (enforce_new_line) {
+    // Advance to the start of the next line…
+    while (!lexer->eof(lexer) && lexer->get_column(lexer) != 0) {
+      // …but if we encounter any non-whitespace along the way, bail.
+      if (!iswspace(lexer->lookahead)) {
+        return false;
+      }
+      lexer->advance(lexer, true);
+    }
+    // Also, if we stopped because we're at EOL, bail.
+    if (lexer->eof(lexer)) return false;
+
+    // Now we're at the start of the line.
+  }
+
+  PRINTF("Advancing through whitespace…\n");
+  while (iswspace(lexer->lookahead)) {
+    lexer->advance(lexer, true);
+  }
+  PRINTF("Next character: %c\n", lexer->lookahead);
+  if (lexer->lookahead != '#') {
+    return false;
+  }
+  // A `#` is the first non-whitespace character on this line. Hence this
+  // entire line is a line comment!
+  lexer->advance(lexer, false);
+  while (!lexer->eof(lexer) && lexer->get_column(lexer) != 0) {
+    if (lexer->lookahead == '%') {
+      PRINTF("Might be end tag…\n");
+      // A closing tab (`%}`) would mean we should end the comment before the
+      // tag. Mark it at this point just to play it safe.
+      lexer->mark_end(lexer);
+      if (scan_for_closing_tag(lexer)) {
+        PRINTF("…it is!\n");
+        return true;
+      }
+    }
+    lexer->advance(lexer, false);
+  }
+  // If we get this far, we're at either the end of the line or the end of the
+  // file.
+  lexer->mark_end(lexer);
+  return true;
+}
+
 static bool scan_for_unparsed_content(TSLexer *lexer, const char *end_directive_name) {
   bool did_match = false;
   PRINTF(
@@ -152,12 +201,31 @@ static bool scan_for_unparsed_content(TSLexer *lexer, const char *end_directive_
 
 bool tree_sitter_liquid_external_scanner_scan(void *payload, TSLexer *lexer, const bool *valid_symbols) {
   PRINTF(
-    "SCAN character: [%c] col: (%d) validity: %i, %i\n",
+    "SCAN character: [%c] col: (%d) validity: %i, %i, %i, %i, %i\n",
     lexer->lookahead,
     lexer->get_column(lexer),
     valid_symbols[RAW_CONTENT],
+    valid_symbols[BLOCK_COMMENT_CONTENT],
+    valid_symbols[LINE_COMMENT],
+    valid_symbols[LINE_COMMENT_IN_COMMENT_DIRECTIVE],
     valid_symbols[ERROR_SENTINEL]
   );
+
+  if (valid_symbols[LINE_COMMENT_IN_COMMENT_DIRECTIVE]) {
+    if (scan_for_line_comment(lexer, false)) {
+      PRINTF("Matched LINE_COMMENT_IN_COMMENT_DIRECTIVE!\n\n\n");
+      lexer->result_symbol = LINE_COMMENT_IN_COMMENT_DIRECTIVE;
+      return true;
+    }
+  }
+
+  if (valid_symbols[LINE_COMMENT]) {
+    if (scan_for_line_comment(lexer, true)) {
+      PRINTF("Matched LINE_COMMENT!\n\n\n");
+      lexer->result_symbol = LINE_COMMENT;
+      return true;
+    }
+  }
 
   // We might want more nuanced behavior here in the future, but for now we'll
   // simply decline to use the external scanner during error recovery.

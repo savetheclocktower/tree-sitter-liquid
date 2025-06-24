@@ -34,6 +34,8 @@ module.exports = grammar({
   externals: ($) => [
     $._raw_content,
     $._block_comment_content,
+    $._line_comment,
+    $._line_comment_in_comment_directive,
     $._error_sentinel
   ],
 
@@ -61,11 +63,12 @@ module.exports = grammar({
       $.include_directive,
       $.render_directive,
       $.echo_directive,
+      alias($._inline_comment_directive, $.comment_directive),
       $.increment_directive,
       $.decrement_directive,
       $.output_directive,
       $.layout_directive,
-      $.directive
+      // $.directive
     ),
 
     _any_liquid_statement: $ => choice(
@@ -75,14 +78,43 @@ module.exports = grammar({
       alias($._echo_statement, $.liquid_echo_statement),
       alias($._render_statement, $.liquid_render_statement),
       alias($._include_statement, $.liquid_include_statement),
+      $.comment,
       $.liquid_for_block,
       $.liquid_case_block,
       $.liquid_if_block,
       $.liquid_unless_block
     ),
 
-    directive: $ => directive(
-      optional($._code),
+    // A directive that starts like `{% #`, where only whitespace separates the
+    // `%` and the `#`.
+    //
+    // As far as I can tell, this is the only situation in which a directive
+    // can validly have a `#` inside of it that is not the first non-whitespace
+    // on the line.
+    //
+    // Invalid:
+    //
+    //   {% echo "foo" # this is a comment %}
+    //
+    // Valid:
+    //
+    //   {% # This is a comment %}
+    //
+    // As the corpus illustrates, a directive can have multiple line comments,
+    // but only the first line comment enjoys this privilege, and only when the
+    // directive is "anonymous."
+    //
+    // The docs actually treat this as a `#` directive (or an inline comment
+    // directive): https://liquidjs.com/tags/inline_comment.html
+    //
+    // Comments also seem to be allowed within `liquid` directives, but
+    // otherwise not within any other directive, luckily.
+    //
+    _inline_comment_directive: $ => directive(
+      seq(
+        alias($._line_comment_in_comment_directive, $.comment),
+        repeat(alias($._line_comment, $.comment))
+      )
     ),
 
     assign_directive: $ => directive($._assign_statement),
@@ -449,7 +481,6 @@ module.exports = grammar({
     raw_block: $ => seq(
       $.raw_directive,
       optional(alias($._raw_content, $.content)),
-      // repeat($._any), // TODO: Scanner
       $.endraw_directive
     ),
 
@@ -495,9 +526,7 @@ module.exports = grammar({
       choice("}}", "-}}")
     ),
 
-    comment: _ => token(choice(
-      seq("{%", /\s#/, /[^%-]+/,),
-    )),
+    comment: $ => $._line_comment,
 
     _code: $ => repeat1(
       $._expression

@@ -1,8 +1,31 @@
 ======================
+Line comment directives
+======================
+
+Anything inside an inline comment tag will not be printed.
+{% # this is an inline comment %}
+But every line must start with a '#'.
+{%
+  # this is a comment
+  # that spans multiple lines
+%}
+---
+(template
+  (content)
+  (comment_directive (comment))
+  (content)
+  (comment_directive
+    (comment)
+    (comment)
+  )
+)
+
+======================
 Liquid directive
 ======================
 
 {% liquid
+  # comment
   assign names = 'Bob, Sally' | split: ', '
 
   for name in names
@@ -17,6 +40,7 @@ Liquid directive
 (template
   (content)
   (liquid_directive
+    (comment)
     (liquid_assign_statement
       left: (identifier)
       right: (filtered_value
@@ -198,6 +222,21 @@ Render directive
 
 ========================
 Layout directive
+========================
+
+{% layout 'hello.liquid' %}
+
+---
+
+(template
+  (content)
+  (layout_directive file: (string))
+  (content)
+)
+
+
+========================
+Comment directive
 ========================
 
 {% layout 'hello.liquid' %}
