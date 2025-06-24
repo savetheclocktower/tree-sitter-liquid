@@ -82,7 +82,8 @@ module.exports = grammar({
       $.liquid_for_block,
       $.liquid_case_block,
       $.liquid_if_block,
-      $.liquid_unless_block
+      $.liquid_unless_block,
+      $.liquid_tablerow_block
     ),
 
     // A directive that starts like `{% #`, where only whitespace separates the

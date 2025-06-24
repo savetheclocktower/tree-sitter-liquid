@@ -34,6 +34,10 @@ Liquid directive
       echo ', '
     endunless
   endfor
+
+  tablerow row in rows
+    echo "Aha!"
+  endtablerow
 %}
 ---
 
@@ -77,6 +81,15 @@ Liquid directive
         (liquid_endunless_statement)
       )
       (liquid_endfor_statement)
+    )
+
+    (liquid_tablerow_block
+      (liquid_tablerow_statement
+        left: (identifier)
+        right: (identifier)
+      )
+      (liquid_echo_statement (string))
+      (liquid_endtablerow_statement)
     )
   )
 )

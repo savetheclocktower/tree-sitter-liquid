@@ -184,6 +184,10 @@
         {
           "type": "SYMBOL",
           "name": "liquid_unless_block"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "liquid_tablerow_block"
         }
       ]
     },

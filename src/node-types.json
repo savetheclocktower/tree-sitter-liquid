@@ -1491,6 +1491,10 @@
           "named": true
         },
         {
+          "type": "liquid_tablerow_block",
+          "named": true
+        },
+        {
           "type": "liquid_unless_block",
           "named": true
         },
@@ -1577,6 +1581,10 @@
         },
         {
           "type": "liquid_render_statement",
+          "named": true
+        },
+        {
+          "type": "liquid_tablerow_block",
           "named": true
         },
         {
@@ -1693,6 +1701,11 @@
     "fields": {}
   },
   {
+    "type": "liquid_endtablerow_statement",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "liquid_endunless_statement",
     "named": true,
     "fields": {}
@@ -1755,6 +1768,10 @@
         },
         {
           "type": "liquid_render_statement",
+          "named": true
+        },
+        {
+          "type": "liquid_tablerow_block",
           "named": true
         },
         {
@@ -1876,6 +1893,10 @@
         },
         {
           "type": "liquid_render_statement",
+          "named": true
+        },
+        {
+          "type": "liquid_tablerow_block",
           "named": true
         },
         {
@@ -2084,6 +2105,117 @@
     }
   },
   {
+    "type": "liquid_tablerow_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "liquid_assign_statement",
+          "named": true
+        },
+        {
+          "type": "liquid_case_block",
+          "named": true
+        },
+        {
+          "type": "liquid_decrement_statement",
+          "named": true
+        },
+        {
+          "type": "liquid_echo_statement",
+          "named": true
+        },
+        {
+          "type": "liquid_endtablerow_statement",
+          "named": true
+        },
+        {
+          "type": "liquid_for_block",
+          "named": true
+        },
+        {
+          "type": "liquid_if_block",
+          "named": true
+        },
+        {
+          "type": "liquid_include_statement",
+          "named": true
+        },
+        {
+          "type": "liquid_increment_statement",
+          "named": true
+        },
+        {
+          "type": "liquid_render_statement",
+          "named": true
+        },
+        {
+          "type": "liquid_tablerow_block",
+          "named": true
+        },
+        {
+          "type": "liquid_tablerow_statement",
+          "named": true
+        },
+        {
+          "type": "liquid_unless_block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "liquid_tablerow_statement",
+    "named": true,
+    "fields": {
+      "left": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "right": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "range_expression",
+            "named": true
+          },
+          {
+            "type": "selector_expression",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "tablerow_parameters",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "liquid_unless_block",
     "named": true,
     "fields": {},
@@ -2141,6 +2273,10 @@
         },
         {
           "type": "liquid_render_statement",
+          "named": true
+        },
+        {
+          "type": "liquid_tablerow_block",
           "named": true
         },
         {
