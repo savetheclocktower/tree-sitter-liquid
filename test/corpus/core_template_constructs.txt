@@ -7,10 +7,12 @@ Include tag (deprecated)
 ---
 
 (template
+  (content)
   (directive
-    (code
-      (include_expression
-        included_file: (string)))))
+    (include_expression file: (string))
+  )
+  (content)
+)
 
 ========================
 Render tag
@@ -21,8 +23,34 @@ Render tag
 ---
 
 (template
+  (content)
   (directive
-    (code
-      (render_expression
-        rendered_file: (string)))))
+    (render_expression file: (string))
+  )
+  (content)
+)
 
+========================
+for loop
+========================
+
+{% for item in sequence %}
+  <li>{{item}}</li>
+{% endfor %}
+
+---
+
+(template
+  (content)
+  (for_block
+    (for_directive
+      left: (identifier)
+      right: (identifier)
+    )
+    (content)
+    (output_directive (identifier))
+    (content)
+    (endfor_directive)
+  )
+  (content)
+)

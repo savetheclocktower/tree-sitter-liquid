@@ -1,0 +1,203 @@
+======================
+If block
+======================
+
+{% if foo == "FOO" %}
+    Variable `foo` equals "FOO"
+{% else %}
+    Variable `foo` not equals "FOO"
+{% endif %}
+
+---
+
+(template
+  (content)
+  (if_block
+    (if_directive
+      (binary_expression
+        left: (identifier)
+        right: (string)
+      )
+    )
+    (content)
+    (else_directive)
+    (content)
+    (endif_directive)
+  )
+  (content)
+)
+
+======================
+Unless block
+======================
+
+{% unless product.title == "Awesome Shoes" %}
+  These shoes are not awesome.
+{% endunless %}
+
+---
+
+(template
+  (content)
+  (unless_block
+    (unless_directive
+      (binary_expression
+        left: (selector_expression
+          operand: (identifier)
+          field: (identifier)
+        )
+        right: (string)
+      )
+    )
+    (content)
+    (endunless_directive)
+  )
+  (content)
+)
+
+======================
+Case block
+======================
+
+{% case handle %}
+  {% when "cake" %}
+     This is a cake
+  {% when "cookie", "biscuit" %}
+     This is a cookie
+  {% else %}
+     This is not a cake nor a cookie
+{% endcase %}
+
+---
+
+(template
+  (content)
+  (case_block
+    (case_directive (identifier))
+    (when_directive (string))
+    (content)
+    (when_directive (string) (string))
+    (content)
+    (else_directive)
+    (content)
+    (endcase_directive)
+  )
+  (content)
+)
+
+======================
+Raw block
+======================
+
+{% raw %}
+  In LiquidJS, {{ this | escape }} will be HTML-escaped, but {{{ that }}} will not. (This does not yet work correctly.)
+{% endraw %}
+
+---
+
+(template
+  (content)
+  (raw_block
+    (raw_directive)
+    (content)
+    (endraw_directive)
+  )
+  (content)
+)
+
+======================
+For/else block
+======================
+
+{% for product in collection.products %}
+  {{ product.title }}
+{% else %}
+  The collection is empty.
+{% endfor %}
+
+---
+
+(template
+  (content)
+  (for_block
+    (for_directive
+      left: (identifier)
+      right: (selector_expression
+        operand: (identifier)
+        field: (identifier)
+      )
+    )
+    (content)
+    (output_directive
+      (selector_expression
+        operand: (identifier)
+        field: (identifier)
+      )
+    )
+    (content)
+    (else_directive)
+    (content)
+    (endfor_directive)
+  )
+  (content)
+)
+
+======================
+Comment block
+======================
+
+{% assign verb = "turned" %}
+{% comment %}
+{% assign verb = "converted" %}
+{% endcomment %}
+Anything you put between {% comment %} and {% endcomment %} tags is {{ verb }} into a comment. This one does not work, either.
+
+---
+
+(template
+  (content)
+  (assign_directive
+    (assignment_expression
+      left: (identifier)
+      right: (string)
+    )
+  )
+  (content)
+  (comment_block
+    (comment_directive)
+    (content)
+    (endcomment_directive)
+  )
+  (content)
+  (comment_block
+    (comment_directive)
+    (content)
+    (endcomment_directive)
+  )
+  (content)
+  (output_directive (identifier))
+  (content)
+)
+
+
+======================
+Capture block
+======================
+
+{% capture my_variable %}
+I am being captured.
+{% endcapture %}
+{{ my_variable }}
+
+---
+
+(template
+  (content)
+  (capture_block
+    (capture_directive (identifier))
+    (content)
+    (endcapture_directive)
+  )
+  (output_directive (identifier))
+  (content)
+)

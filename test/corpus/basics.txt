@@ -7,9 +7,10 @@ String literal
 ---
 
 (template
-  (output_directive
-    (code
-      (string))))
+  (content)
+  (output_directive (string))
+  (content)
+)
 
 ======================
 Number literal
@@ -20,9 +21,10 @@ Number literal
 ---
 
 (template
-  (output_directive
-    (code
-      (number))))
+  (content)
+  (output_directive (number))
+  (content)
+)
 
 ======================
 Boolean literal
@@ -33,9 +35,10 @@ Boolean literal
 ---
 
 (template
-  (output_directive
-    (code
-      (boolean))))
+  (content)
+  (output_directive (boolean))
+  (content)
+)
 
 ======================
 Identifier with fields
@@ -46,12 +49,16 @@ Identifier with fields
 ---
 
 (template
+  (content)
   (output_directive
-    (code
-      (selector_expression
-        operand: (identifier)
-        field: (identifier)
-        field: (identifier)))))
+    (selector_expression
+      operand: (identifier)
+      field: (identifier)
+      field: (identifier)
+    )
+  )
+  (content)
+)
 
 ======================
 Identifier
@@ -62,7 +69,50 @@ Identifier
 ---
 
 (template
-  (output_directive
-    (code
-      (identifier))))
+  (content)
+  (output_directive (identifier))
+  (content)
+)
 
+======================
+Assign
+======================
+
+{% assign foo = "FOO" %}
+
+---
+
+(template
+  (content)
+  (assign_directive
+    (assignment_expression
+      left: (identifier)
+      right: (string)
+    )
+  )
+  (content)
+)
+
+
+======================
+Chain
+======================
+
+{{ username | append: ", welcome to LiquidJS!" | capitalize }}
+
+---
+
+(template
+  (content)
+  (output_directive
+    (identifier)
+    (filter_expression
+      name: (identifier)
+      parameter: (string)
+    )
+    (filter_expression
+      name: (identifier)
+    )
+  )
+  (content)
+)
