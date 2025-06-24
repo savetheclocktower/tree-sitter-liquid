@@ -2,6 +2,8 @@
 
 A [Tree-sitter][] parser for [Liquid templates][Liquid].
 
+Nominally based on [`adamazing/tree-sitter-liquid`](git@github.com:savetheclocktower/tree-sitter-liquid.git), but with vast modifications.
+
 ## What’s supported?
 
 Nearly anything documented on either [Shopify’s Liquid site][Liquid] or the [LiquidJS site][LiquidJS].
