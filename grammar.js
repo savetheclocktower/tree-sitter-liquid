@@ -14,6 +14,18 @@ function directive (middle) {
   );
 }
 
+function sep (thing, separator) {
+  return seq(
+    thing,
+    repeat(
+      seq(
+        separator,
+        thing
+      )
+    )
+  );
+}
+
 module.exports = grammar({
   name: 'liquid',
 
@@ -41,6 +53,9 @@ module.exports = grammar({
       $.capture_block,
       $.raw_block,
       $.comment_block,
+      $.block_block,
+      $.tablerow_block,
+      $.cycle_directive,
       $.liquid_directive,
       $.assign_directive,
       $.include_directive,
@@ -49,6 +64,7 @@ module.exports = grammar({
       $.increment_directive,
       $.decrement_directive,
       $.output_directive,
+      $.layout_directive,
       $.directive
     ),
 
@@ -73,7 +89,7 @@ module.exports = grammar({
 
     _assign_statement: $ => seq(
       "assign",
-      $.assignment_expression
+      $._assignment_expression
     ),
 
     increment_directive: $ => directive($._increment_statement),
@@ -91,6 +107,26 @@ module.exports = grammar({
     _decrement_statement: $ => seq(
       "decrement",
       $.identifier
+    ),
+
+    cycle_directive: $ => directive($._cycle_statement),
+
+    _cycle_statement: $ => seq(
+      "cycle",
+      $._cycle_parameters
+    ),
+
+    _cycle_parameters: $ => seq(
+      optional(
+        seq(
+          field('group', $.string),
+          ':'
+        )
+      ),
+      sep(
+        $.string,
+        ","
+      )
     ),
 
     // Any external document content. This is an injection target.
@@ -114,7 +150,7 @@ module.exports = grammar({
       $._for_statement
     ),
 
-    endfor_directive: _ => directive("endfor"),
+    endfor_directive: $ => directive($._endfor_statement),
 
     _for_statement: $ => seq(
       "for",
@@ -124,17 +160,62 @@ module.exports = grammar({
       optional("reversed")
     ),
 
+    _endfor_statement: _ => "endfor",
+
     liquid_for_block: $ => prec.left(seq(
-      $._for_statement,
+      alias($._for_statement, $.liquid_for_statement),
       repeat($._any_liquid_statement),
       optional(
         seq(
-          "else",
+          alias($._else_statement, $.liquid_else_statement),
           repeat($._any_liquid_statement),
         )
       ),
-      "endfor"
+      alias($._endfor_statement, $.liquid_endfor_statement)
     )),
+
+    // BLOCK
+    block_block: $ => seq(
+      $.block_directive,
+      repeat($._any),
+      $.endblock_directive
+    ),
+
+    _block_statement: $ => seq(
+      "block",
+      field('name', $.identifier)
+    ),
+    block_directive: $ => directive($._block_statement),
+
+    _endblock_statement: _ => "endblock",
+    endblock_directive: $ => directive($._endblock_statement),
+
+    // TABLEROW
+    tablerow_block: $ => seq(
+      $.tablerow_directive,
+      repeat($._any),
+      $.endtablerow_directive
+    ),
+
+    _tablerow_statement: $ => seq(
+      "tablerow",
+      field('left', $.identifier),
+      "in",
+      field('right', $._iterable_value),
+      optional($.tablerow_parameters)
+    ),
+    tablerow_directive: $ => directive($._tablerow_statement),
+
+    tablerow_parameters: $ => repeat1($.tablerow_parameter),
+
+    tablerow_parameter: $ => seq(
+      field('key', $.identifier),
+      ':',
+      field('value', $._value)
+    ),
+
+    _endtablerow_statement: _ => "endtablerow",
+    endtablerow_directive: $ => directive($._endtablerow_statement),
 
     // CASE
 
@@ -175,23 +256,24 @@ module.exports = grammar({
       )
     ),
 
-    endcase_directive: _ => directive("endcase"),
+    _endcase_statement: _ => "endcase",
+    endcase_directive: $ => directive($._endcase_statement),
 
     liquid_case_block: $ => seq(
-      $._case_statement,
+      alias($._case_statement, $.liquid_case_statement),
       prec.right(1, repeat(
         seq(
-          $._when_statement,
+          alias($._when_statement, $.liquid_when_statement),
           prec.left(1, repeat($._any_liquid_statement)),
         )
       )),
       optional(
         seq(
-          "else",
+          alias($._else_statement, $.liquid_else_statement),
           repeat($._any_liquid_statement)
         )
       ),
-      "endcase"
+      alias($._endcase_statement, $.liquid_endcase_statement)
     ),
 
     // IF
@@ -228,11 +310,14 @@ module.exports = grammar({
       $._expression
     ),
 
-    else_directive: _ => directive("else"),
-    endif_directive: _ => directive("endif"),
+    _else_statement: _ => "else",
+    else_directive: $ => directive($._else_statement),
+
+    _endif_statement: _ => "endif",
+    endif_directive: $ => directive($._endif_statement),
 
     liquid_if_block: $ => seq(
-      $._if_statement,
+      alias($._if_statement, $.liquid_if_statement),
       repeat($._any_liquid_statement),
       repeat(
         seq(
@@ -242,11 +327,11 @@ module.exports = grammar({
       ),
       optional(
         seq(
-          "else",
+          alias($._else_statement, $.liquid_else_statement),
           optional($._any_liquid_statement)
         )
       ),
-      "endif"
+      alias($._endif_statement, $.liquid_endif_statement),
     ),
 
     // UNLESS
@@ -276,24 +361,25 @@ module.exports = grammar({
       $._expression
     ),
 
-    endunless_directive: _ => directive("endunless"),
+    _endunless_statement: _ => "endunless",
+    endunless_directive: $ => directive($._endunless_statement),
 
     liquid_unless_block: $ => seq(
-      $._unless_statement,
+      alias($._unless_statement, $.liquid_unless_statement),
       repeat($._any_liquid_statement),
       repeat(
         seq(
-          $._elsif_statement,
+          alias($._elsif_statement, $.liquid_elsif_statement),
           optional($._any_liquid_statement)
         )
       ),
       optional(
         seq(
-          "else",
+          alias($._else_statement, $.liquid_else_statement),
           optional($._any_liquid_statement)
         )
       ),
-      "endunless"
+      alias($._endunless_statement, $.liquid_endunless_statement),
     ),
 
     // CAPTURE
@@ -303,14 +389,15 @@ module.exports = grammar({
       repeat($._any),
       $.endcapture_directive
     ),
-    capture_directive: $ => directive($._capture_statement),
 
     _capture_statement: $ => seq(
       "capture",
       $.identifier
     ),
+    capture_directive: $ => directive($._capture_statement),
 
-    endcapture_directive: _ => directive("endcapture"),
+    _endcapture_statement: _ => "endcapture",
+    endcapture_directive: $ => directive($._endcapture_statement),
 
     // TABLEROW
 
@@ -633,16 +720,16 @@ module.exports = grammar({
 
     _render_with_as: $ => seq(
       "with",
-      $._variable,
+      field('with', $._variable),
       "as",
-      $.identifier
+      field('as', $.identifier)
     ),
 
     _render_for_as: $ => seq(
       "for",
-      $._variable,
+      field('for', $._variable),
       "as",
-      $.identifier
+      field('as', $.identifier)
     ),
 
     binary_expression: $ => choice(
@@ -658,14 +745,20 @@ module.exports = grammar({
       ))
     ),
 
-    echo_directive: $ => directive($._echo_statement),
-
     _echo_statement: $ => seq(
       "echo",
       $._code
     ),
+    echo_directive: $ => directive($._echo_statement),
 
-    assignment_expression: $ => prec.right(1,
+    _layout_statement: $ => seq(
+      "layout",
+      field('file', $.string)
+    ),
+    layout_directive: $ => directive($._layout_statement),
+
+
+    _assignment_expression: $ => prec.right(1,
       seq(
         field('left', $.identifier),
         "=",

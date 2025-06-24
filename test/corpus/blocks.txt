@@ -8,6 +8,10 @@ If block
     Variable `foo` not equals "FOO"
 {% endif %}
 
+{% if my_variable != true %}
+  This statement is valid.
+{% endif %}
+
 ---
 
 (template
@@ -21,6 +25,17 @@ If block
     )
     (content)
     (else_directive)
+    (content)
+    (endif_directive)
+  )
+  (content)
+  (if_block
+    (if_directive
+      (binary_expression
+        left: (identifier)
+        right: (boolean)
+      )
+    )
     (content)
     (endif_directive)
   )
@@ -158,10 +173,8 @@ Anything you put between {% comment %} and {% endcomment %} tags is {{ verb }} i
 (template
   (content)
   (assign_directive
-    (assignment_expression
-      left: (identifier)
-      right: (string)
-    )
+    left: (identifier)
+    right: (string)
   )
   (content)
   (comment_block
@@ -202,4 +215,115 @@ I am being captured.
   (content)
   (output_directive (identifier))
   (content)
+)
+
+
+======================
+Block block
+======================
+
+{% block header %}Header{% endblock %}
+{% block content %}{% endblock %}
+{% block footer %}{% endblock %}
+---
+
+(template
+  (content)
+  (block_block
+    (block_directive name: (identifier))
+    (content)
+    (endblock_directive)
+  )
+  (content)
+  (block_block
+    (block_directive name: (identifier))
+    (endblock_directive)
+  )
+  (content)
+  (block_block
+    (block_directive name: (identifier))
+    (endblock_directive)
+  )
+)
+
+======================
+Tablerow block
+======================
+
+{% tablerow product in collection.products %}
+  {{ product.title }}
+{% endtablerow %}
+{% tablerow product in collection.products cols:2 offset:3 %}
+  {{ product.title }}
+{% endtablerow %}
+{% tablerow i in (1..num) %}
+  {{ i }}
+{% endtablerow %}
+---
+
+(template
+  (content)
+  (tablerow_block
+    (tablerow_directive
+      left: (identifier)
+      right: (selector_expression
+        operand: (identifier)
+        field: (identifier)
+      )
+    )
+    (content)
+    (output_directive
+      (selector_expression
+        operand: (identifier)
+        field: (identifier)
+      )
+    )
+    (content)
+    (endtablerow_directive)
+  )
+  (content)
+  (tablerow_block
+    (tablerow_directive
+      left: (identifier)
+      right: (selector_expression
+        operand: (identifier)
+        field: (identifier)
+      )
+      (tablerow_parameters
+        (tablerow_parameter
+          key: (identifier)
+          value: (number)
+        )
+        (tablerow_parameter
+          key: (identifier)
+          value: (number)
+        )
+      )
+    )
+    (content)
+    (output_directive
+      (selector_expression
+        operand: (identifier)
+        field: (identifier)
+      )
+    )
+    (content)
+    (endtablerow_directive)
+  )
+  (content)
+  (tablerow_block
+    (tablerow_directive
+      left: (identifier)
+      right: (range_expression
+        start: (number)
+        end: (identifier)
+      )
+    )
+    (content)
+    (output_directive
+      (identifier)
+    )
+    (content)
+    (endtablerow_directive)
+  )
 )

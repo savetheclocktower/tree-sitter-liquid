@@ -85,10 +85,8 @@ Assign
 (template
   (content)
   (assign_directive
-    (assignment_expression
-      left: (identifier)
-      right: (string)
-    )
+    left: (identifier)
+    right: (string)
   )
   (content)
 )

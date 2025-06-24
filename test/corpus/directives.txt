@@ -1,0 +1,211 @@
+======================
+Liquid directive
+======================
+
+{% liquid
+  assign names = 'Bob, Sally' | split: ', '
+
+  for name in names
+    echo 'Hello, ' | append: name
+    unless forloop.last
+      echo ', '
+    endunless
+  endfor
+%}
+---
+
+(template
+  (content)
+  (liquid_directive
+    (liquid_assign_statement
+      left: (identifier)
+      right: (filtered_value
+        operand: (string)
+        filter: (filter_expression
+          name: (identifier)
+          parameter: (string)
+        )
+      )
+    )
+
+    (liquid_for_block
+      (liquid_for_statement
+        left: (identifier)
+        right: (identifier)
+      )
+      (liquid_echo_statement
+        (filtered_value
+          operand: (string)
+          filter: (filter_expression
+            name: (identifier)
+            parameter: (identifier)
+          )
+        )
+      )
+      (liquid_unless_block
+        (liquid_unless_statement
+          (selector_expression
+            operand: (identifier)
+            field: (identifier)
+          )
+        )
+        (liquid_echo_statement (string))
+        (liquid_endunless_statement)
+      )
+      (liquid_endfor_statement)
+    )
+  )
+)
+
+======================
+Cycle directive
+======================
+
+{% cycle "one", "two", "three" %}
+{% cycle "first": "one", "two", "three" %}
+---
+
+(template
+  (content)
+  (cycle_directive
+    (string)
+    (string)
+    (string)
+  )
+  (content)
+  (cycle_directive
+    group: (string)
+    (string)
+    (string)
+    (string)
+  )
+)
+
+
+==============================
+Increment/decrement directives
+==============================
+
+{% increment my_counter %}
+{% decrement variable %}
+---
+
+(template
+  (content)
+  (increment_directive (identifier))
+  (content)
+  (decrement_directive (identifier))
+)
+
+
+==============================
+Echo directive
+==============================
+
+{% echo "Hello, world!" %}
+{% echo 5 %}
+{% echo username | append: ", welcome to LiquidJS!" | capitalize %}
+---
+
+(template
+  (content)
+  (echo_directive
+    (string)
+  )
+  (content)
+  (echo_directive
+    (number)
+  )
+  (content)
+  (echo_directive
+    (filtered_value
+      operand: (filtered_value
+        operand: (identifier)
+        filter: (filter_expression
+          name: (identifier)
+          parameter: (string)
+        )
+      )
+      filter: (filter_expression name: (identifier))
+    )
+  )
+)
+
+==============================
+Include directive (deprecated)
+==============================
+
+{% include 'hello.liquid' %}
+{% include 'hello.liquid', foo: true %}
+{% include 'name', my_variable: my_variable, my_other_variable: 'oranges' %}
+{% include 'product' with featured_product as product %}
+---
+
+(template
+  (content)
+  (include_directive file: (string))
+  (content)
+  (include_directive
+    file: (string)
+    parameters: (include_parameters
+      (include_parameter key: (identifier) value: (boolean))
+    )
+  )
+  (content)
+  (include_directive
+    file: (string)
+    parameters: (include_parameters
+      (include_parameter key: (identifier) value: (identifier))
+      (include_parameter key: (identifier) value: (string))
+    )
+  )
+  (content)
+  (include_directive file: (string) with: (identifier) as: (identifier))
+)
+
+========================
+Render directive
+========================
+
+{% render 'hello.liquid' %}
+{% render 'hello.liquid', foo: true %}
+{% render 'name', my_variable: my_variable, my_other_variable: 'oranges' %}
+{% render 'product' with featured_product as product %}
+---
+
+(template
+  (content)
+  (render_directive file: (string))
+  (content)
+  (render_directive
+    file: (string)
+    parameters: (render_parameters
+      (render_parameter key: (identifier) value: (boolean))
+    )
+  )
+  (content)
+  (render_directive
+    file: (string)
+    parameters: (render_parameters
+      (render_parameter key: (identifier) value: (identifier))
+      (render_parameter key: (identifier) value: (string))
+    )
+  )
+  (content)
+  (render_directive file: (string) with: (identifier) as: (identifier))
+)
+
+
+========================
+Layout directive
+========================
+
+{% layout 'hello.liquid' %}
+
+---
+
+(template
+  (content)
+  (layout_directive file: (string))
+  (content)
+)

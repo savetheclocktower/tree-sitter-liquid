@@ -1,32 +1,4 @@
 ========================
-Include tag (deprecated)
-========================
-
-{% include 'hello.liquid' %}
-
----
-
-(template
-  (content)
-  (include_directive file: (string))
-  (content)
-)
-
-========================
-Render tag
-========================
-
-{% render 'hello.liquid' %}
-
----
-
-(template
-  (content)
-  (render_directive file: (string))
-  (content)
-)
-
-========================
 for loop
 ========================
 
