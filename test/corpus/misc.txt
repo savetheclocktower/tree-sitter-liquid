@@ -1,0 +1,13 @@
+======================
+Empty directive
+======================
+
+{%%}
+{% %}
+---
+(template
+  (content)
+  (empty_directive)
+  (content)
+  (empty_directive)
+)

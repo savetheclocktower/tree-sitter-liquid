@@ -68,7 +68,7 @@ module.exports = grammar({
       $.decrement_directive,
       $.output_directive,
       $.layout_directive,
-      // $.directive
+      $.empty_directive
     ),
 
     _any_liquid_statement: $ => choice(
@@ -115,6 +115,13 @@ module.exports = grammar({
         alias($._line_comment_in_comment_directive, $.comment),
         repeat(alias($._line_comment, $.comment))
       )
+    ),
+
+    // A directive with nothing in it, or else nothing but whitespace. It's
+    // useful to detect this within the editor even if it's not valid Liquid.
+    empty_directive: _ => seq(
+      choice("{%", "{%-"),
+      choice("%}", "-%}")
     ),
 
     assign_directive: $ => directive($._assign_statement),
@@ -227,6 +234,12 @@ module.exports = grammar({
       $.tablerow_directive,
       repeat($._any),
       $.endtablerow_directive
+    ),
+
+    liquid_tablerow_block: $ => seq(
+      alias($._tablerow_statement, $.liquid_tablerow_statement),
+      repeat($._any_liquid_statement),
+      alias($._endtablerow_statement, $.liquid_endtablerow_statement)
     ),
 
     _tablerow_statement: $ => seq(
@@ -504,19 +517,11 @@ module.exports = grammar({
     liquid_directive: $ => directive(
       seq(
         "liquid",
-        // "foo"
         optional($._liquid_block_content),
       )
     ),
 
     _liquid_block_content: $ => repeat1($._any_liquid_statement),
-
-    _liquid_directive_content: $ => choice(
-      alias($._assign_statement, $.liquid_assign_statement),
-      alias($._increment_statement, $.liquid_increment_statement),
-      alias($._decrement_statement, $.liquid_decrement_statement),
-      // TODO: Echo
-    ),
 
     // OUTPUT
 

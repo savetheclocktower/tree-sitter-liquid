@@ -222,6 +222,10 @@
           "named": true
         },
         {
+          "type": "empty_directive",
+          "named": true
+        },
+        {
           "type": "endblock_directive",
           "named": true
         },
@@ -346,6 +350,10 @@
           "named": true
         },
         {
+          "type": "empty_directive",
+          "named": true
+        },
+        {
           "type": "endcapture_directive",
           "named": true
         },
@@ -465,6 +473,10 @@
         },
         {
           "type": "else_directive",
+          "named": true
+        },
+        {
+          "type": "empty_directive",
           "named": true
         },
         {
@@ -718,6 +730,11 @@
     }
   },
   {
+    "type": "empty_directive",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "endblock_directive",
     "named": true,
     "fields": {}
@@ -915,6 +932,10 @@
           "named": true
         },
         {
+          "type": "empty_directive",
+          "named": true
+        },
+        {
           "type": "endfor_directive",
           "named": true
         },
@@ -1057,6 +1078,10 @@
         },
         {
           "type": "elsif_directive",
+          "named": true
+        },
+        {
+          "type": "empty_directive",
           "named": true
         },
         {
@@ -2536,6 +2561,10 @@
           "named": true
         },
         {
+          "type": "empty_directive",
+          "named": true
+        },
+        {
           "type": "endtablerow_directive",
           "named": true
         },
@@ -2749,6 +2778,10 @@
           "named": true
         },
         {
+          "type": "empty_directive",
+          "named": true
+        },
+        {
           "type": "for_block",
           "named": true
         },
@@ -2849,6 +2882,10 @@
         },
         {
           "type": "elsif_directive",
+          "named": true
+        },
+        {
+          "type": "empty_directive",
           "named": true
         },
         {
