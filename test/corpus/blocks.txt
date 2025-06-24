@@ -90,7 +90,7 @@ Raw block
 ======================
 
 {% raw %}
-  In LiquidJS, {{ this | escape }} will be HTML-escaped, but {{{ that }}} will not. (This does not yet work correctly.)
+  In LiquidJS, {{ this | escape }} will be HTML-escaped, but {{{ that }}} will not.
 {% endraw %}
 
 ---
@@ -150,7 +150,8 @@ Comment block
 {% comment %}
 {% assign verb = "converted" %}
 {% endcomment %}
-Anything you put between {% comment %} and {% endcomment %} tags is {{ verb }} into a comment. This one does not work, either.
+
+Anything you put between {% comment %} and {% endcomment %} tags is {{ verb }} into a comment.
 
 ---
 
@@ -165,13 +166,13 @@ Anything you put between {% comment %} and {% endcomment %} tags is {{ verb }} i
   (content)
   (comment_block
     (comment_directive)
-    (content)
+    (comment)
     (endcomment_directive)
   )
   (content)
   (comment_block
     (comment_directive)
-    (content)
+    (comment)
     (endcomment_directive)
   )
   (content)
@@ -198,6 +199,7 @@ I am being captured.
     (content)
     (endcapture_directive)
   )
+  (content)
   (output_directive (identifier))
   (content)
 )

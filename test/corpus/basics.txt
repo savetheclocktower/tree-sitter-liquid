@@ -105,13 +105,17 @@ Chain
 (template
   (content)
   (output_directive
-    (identifier)
-    (filter_expression
-      name: (identifier)
-      parameter: (string)
-    )
-    (filter_expression
-      name: (identifier)
+    (filtered_value
+      operand: (filtered_value
+        operand: (identifier)
+        filter: (filter_expression
+          name: (identifier)
+          parameter: (string)
+        )
+      )
+      filter: (filter_expression
+        name: (identifier)
+      )
     )
   )
   (content)

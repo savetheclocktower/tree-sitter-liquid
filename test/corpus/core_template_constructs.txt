@@ -8,9 +8,7 @@ Include tag (deprecated)
 
 (template
   (content)
-  (directive
-    (include_expression file: (string))
-  )
+  (include_directive file: (string))
   (content)
 )
 
@@ -24,9 +22,7 @@ Render tag
 
 (template
   (content)
-  (directive
-    (render_expression file: (string))
-  )
+  (render_directive file: (string))
   (content)
 )
 

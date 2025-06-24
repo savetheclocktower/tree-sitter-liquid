@@ -38,22 +38,30 @@ module.exports = grammar({
       $.if_block,
       $.unless_block,
       $.case_block,
-      $.liquid_directive,
-      $.assign_directive,
-      $.output_directive,
-      $.capture_directive,
+      $.capture_block,
       $.raw_block,
       $.comment_block,
+      $.liquid_directive,
+      $.assign_directive,
+      $.include_directive,
+      $.render_directive,
+      $.echo_directive,
+      $.increment_directive,
+      $.decrement_directive,
+      $.output_directive,
       $.directive
     ),
 
     _any_liquid_statement: $ => choice(
       alias($._assign_statement, $.liquid_assign_statement),
       alias($._increment_statement, $.liquid_increment_statement),
-      // alias($._decrement_statement, $.liquid_decrement_statement),
+      alias($._decrement_statement, $.liquid_decrement_statement),
+      alias($._echo_statement, $.liquid_echo_statement),
+      alias($._render_statement, $.liquid_render_statement),
+      alias($._include_statement, $.liquid_include_statement),
       $.liquid_for_block,
-      // $.liquid_case_block,
-      // $.liquid_if_block,
+      $.liquid_case_block,
+      $.liquid_if_block,
       $.liquid_unless_block
     ),
 
@@ -113,7 +121,7 @@ module.exports = grammar({
       field('left', $.identifier),
       "in",
       field('right', $._iterable_value),
-      // optional("reversed")
+      optional("reversed")
     ),
 
     liquid_for_block: $ => prec.left(seq(
@@ -290,6 +298,11 @@ module.exports = grammar({
 
     // CAPTURE
     // (Probably not valid in a `liquid` directive)
+    capture_block: $ => seq(
+      $.capture_directive,
+      repeat($._any),
+      $.endcapture_directive
+    ),
     capture_directive: $ => directive($._capture_statement),
 
     _capture_statement: $ => seq(
@@ -400,14 +413,8 @@ module.exports = grammar({
     )),
 
     _code: $ => repeat1(
-      choice(
-        $._expression
-      )
+      $._expression
     ),
-
-    // control_code: _ => choice(
-    //   ""
-    // ),
 
     _literal: $ => choice(
       $.string,
@@ -416,9 +423,51 @@ module.exports = grammar({
       $.empty
     ),
 
-    string: _ => choice(
-      seq("'", /[^']*/, "'"),
-      seq('"', /[^"]*/, '"')
+    // STRINGS
+
+    string: $ => choice(
+      $._string_single_quoted,
+      $._string_double_quoted,
+    ),
+
+    _string_single_quoted: $ => seq(
+      "'",
+      repeat(
+        choice(
+          alias("\\'", $.escape_sequence),
+          // TODO: Strings can have their own inner output directives. To
+          // detect these would require interpreting escaped quotation marks as
+          // literal quotation marks, as in the examples at
+          //
+          // https://liquidjs.com/tags/render.html#Outputs-amp-Filters
+          //
+          // and that's just not the sort of pain I signed up for. If folks
+          // want syntax highlighting for those interpolations, I'd accept a
+          // well-crafted PR.
+          /[^']/
+        )
+      ),
+      "'"
+    ),
+
+    _string_double_quoted: $ => seq(
+      '"',
+      repeat(
+        choice(
+          alias('\\"', $.escape_sequence),
+          // TODO: Strings can have their own inner output directives. To
+          // detect these would require interpreting escaped quotation marks as
+          // literal quotation marks, as in the examples at
+          //
+          // https://liquidjs.com/tags/render.html#Outputs-amp-Filters
+          //
+          // and that's just not the sort of pain I signed up for. If folks
+          // want syntax highlighting for those interpolations, I'd accept a
+          // well-crafted PR.
+          /[^"]/
+        )
+      ),
+      '"',
     ),
 
     number: $ => choice(
@@ -433,7 +482,8 @@ module.exports = grammar({
 
     empty: _ => "empty",
 
-    _value: $ => prec(2, choice(
+    _value: $ => prec(4, choice(
+      $.filtered_value,
       $._variable,
       $._literal,
     )),
@@ -448,28 +498,39 @@ module.exports = grammar({
       $.selector_expression,
     ),
 
+    // TODO: Suppose I have:
+    //
+    //   {% assign names = 'Bob, Sally' | split: ', ' %}
+    //
+    // Should all of
+    //
+    //   'Bob, Sally' | split: ', '
+    //
+    // be grouped together in a hierarchy? If so, what do we call that?
     _expression: $ => choice(
-      $.identifier,
-      $.include_expression,
-      $.render_expression,
-      $.selector_expression,
+      $._variable,
       $.binary_expression,
-      $._filter_expressions,
-      $._literal
+      $._literal,
+      $.filtered_value
       // TODO: add more expression types
     ),
 
-    _filter_expressions: $ => choice(
+    _filter_expressions: $ => prec.left(choice(
       alias($._simple_filter, $.filter_expression),
       $.filter_expression
-    ),
+    )),
+
+    filtered_value: $ => prec.left(3, seq(
+      field('operand', $._value),
+      field('filter', $._filter_expressions)
+    )),
 
     _simple_filter: $ => seq(
       "|",
       field('name', $.identifier)
     ),
 
-    filter_expression: $ => seq(
+    filter_expression: $ => prec.left(5, seq(
       "|",
       field('name', $.identifier),
       ":",
@@ -480,7 +541,7 @@ module.exports = grammar({
           field('parameter', $._value),
         )
       )
-    ),
+    )),
 
     selector_expression: $ => choice(
       prec(1, seq(
@@ -526,12 +587,28 @@ module.exports = grammar({
 
     _assignment_operator: _ => "=",
 
-    include_expression: $ => seq(
+
+    // INCLUDE
+    // (deprecated)
+    _include_statement: $ => prec.left(seq(
       "include",
-      field('file', $.string)
+      field('file', $.string),
+      optional(
+        choice(
+          field('parameters', $.include_parameters),
+          $._render_with_as,
+          $._render_for_as
+        )
+      )
+    )),
+
+    include_parameters: $ => repeat1(
+      alias($.render_parameter, $.include_parameter)
     ),
 
-    render_expression: $ => prec.left(seq(
+    include_directive: $ => directive($._include_statement),
+
+    _render_statement: $ => prec.left(seq(
       "render",
       field('file', $.string),
       optional(
@@ -542,6 +619,8 @@ module.exports = grammar({
         )
       ))
     ),
+
+    render_directive: $ => directive($._render_statement),
 
     render_parameters: $ => repeat1($.render_parameter),
 
@@ -577,6 +656,13 @@ module.exports = grammar({
         $._contains_operator,
         field('left', $.string)
       ))
+    ),
+
+    echo_directive: $ => directive($._echo_statement),
+
+    _echo_statement: $ => seq(
+      "echo",
+      $._code
     ),
 
     assignment_expression: $ => prec.right(1,
