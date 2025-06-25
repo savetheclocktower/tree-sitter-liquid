@@ -12,6 +12,13 @@ If block
   This statement is valid.
 {% endif %}
 
+{%- if forloop.first == true -%}
+  First {{x.y}}
+{%- elsif forloop.last == true -%}
+  Last {{x.y}}
+{%- else -%} {{ forloop.length }}
+{%- endif %}
+
 ---
 
 (template
@@ -40,6 +47,53 @@ If block
     (endif_directive)
   )
   (content)
+  (if_block
+    (if_directive
+      (binary_expression
+        left: (selector_expression
+          operand: (identifier)
+          field: (identifier)
+        )
+        right: (boolean)
+      )
+    )
+    (content)
+    (output_directive
+      (selector_expression
+        operand: (identifier)
+        field: (identifier)
+      )
+    )
+    (content)
+    (elsif_directive
+      (binary_expression
+        left: (selector_expression
+          operand: (identifier)
+          field: (identifier)
+        )
+        right: (boolean)
+      )
+    )
+    (content)
+    (output_directive
+      (selector_expression
+        operand: (identifier)
+        field: (identifier)
+      )
+    )
+    (content)
+    (else_directive)
+    (content)
+    (output_directive
+      (selector_expression
+        operand: (identifier)
+        field: (identifier)
+      )
+    )
+    (content)
+    (endif_directive)
+  )
+  (content)
 )
 
 ======================
@@ -49,6 +103,13 @@ Unless block
 {% unless product.title == "Awesome Shoes" %}
   These shoes are not awesome.
 {% endunless %}
+
+{%- unless forloop.first == true -%}
+  First {{x.y}}
+{%- elsif forloop.last == true -%}
+  Last {{x.y}}
+{%- else -%} {{ forloop.length }}
+{%- endunless %}
 
 ---
 
@@ -62,6 +123,53 @@ Unless block
           field: (identifier)
         )
         right: (string)
+      )
+    )
+    (content)
+    (endunless_directive)
+  )
+  (content)
+  (unless_block
+    (unless_directive
+      (binary_expression
+        left: (selector_expression
+          operand: (identifier)
+          field: (identifier)
+        )
+        right: (boolean)
+      )
+    )
+    (content)
+    (output_directive
+      (selector_expression
+        operand: (identifier)
+        field: (identifier)
+      )
+    )
+    (content)
+    (elsif_directive
+      (binary_expression
+        left: (selector_expression
+          operand: (identifier)
+          field: (identifier)
+        )
+        right: (boolean)
+      )
+    )
+    (content)
+    (output_directive
+      (selector_expression
+        operand: (identifier)
+        field: (identifier)
+      )
+    )
+    (content)
+    (else_directive)
+    (content)
+    (output_directive
+      (selector_expression
+        operand: (identifier)
+        field: (identifier)
       )
     )
     (content)

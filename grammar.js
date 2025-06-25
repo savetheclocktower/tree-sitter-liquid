@@ -39,6 +39,10 @@ module.exports = grammar({
     $._error_sentinel
   ],
 
+  // conflicts: $ => [
+  //   [$.if_block]
+  // ],
+
   word: $ => $.identifier,
 
   rules: {
@@ -344,35 +348,31 @@ module.exports = grammar({
 
     if_block: $ => seq(
       $.if_directive,
+      // We say `repeat($._any)` here, but we want any `elsif` we encounter to
+      // belong to the next section, and for the `else` to be the last one (and
+      // for there to be only one). Hence the increasing precedence over time
+      // so that we know the direction in which to resolve any conflicts.
       repeat($._any),
       repeat(
         seq(
           $.elsif_directive,
-          optional($._any),
+          prec.right(6, repeat($._any)),
         )
       ),
-      repeat(
+      optional(
         seq(
           $.else_directive,
-          optional($._any)
+          prec.right(8, repeat($._any))
         )
       ),
       $.endif_directive
     ),
 
+    _if_statement: $ => seq("if", $._expression),
     if_directive: $ => directive($._if_statement),
 
-    _if_statement: $ => seq(
-      "if",
-      $._expression
-    ),
-
+    _elsif_statement: $ => seq("elsif", $._expression),
     elsif_directive: $ => directive($._elsif_statement),
-
-    _elsif_statement: $ => seq(
-      "elsif",
-      $._expression
-    ),
 
     _else_statement: _ => "else",
     else_directive: $ => directive($._else_statement),
@@ -402,17 +402,21 @@ module.exports = grammar({
 
     unless_block: $ => seq(
       $.unless_directive,
+      // We say `repeat($._any)` here, but we want any `elsif` we encounter to
+      // belong to the next section, and for the `else` to be the last one (and
+      // for there to be only one). Hence the increasing precedence over time
+      // so that we know the direction in which to resolve any conflicts.
       repeat($._any),
       repeat(
         seq(
           $.elsif_directive,
-          optional($._any),
+          prec.right(6, repeat($._any)),
         )
       ),
-      repeat(
+      optional(
         seq(
           $.else_directive,
-          optional($._any)
+          prec.right(8, repeat($._any))
         )
       ),
       $.endunless_directive

@@ -10,10 +10,15 @@ Nearly anything documented on either [Shopify’s Liquid site][Liquid] or the [L
 
 ## What isn’t (yet) supported?
 
-* [Jekyll’s custom tags](https://jekyllrb.com/docs/liquid/tags/) are not implemented. Custom tags are annoying because it’s impossible to know how to highlight them; there is no standard for the content after the tag name. I’ll eventually add these and also add some sort of fallback mode for tags that aren’t recognized but seem valid.
-* [Jekyll-like filenames](https://liquidjs.com/tags/render.html#Jekyll-like-Filenames) in `render` tags.
-* Escape sequences are properly recognized within strings, but [Liquid within Liquid strings](https://liquidjs.com/tags/render.html#Outputs-amp-Filters) is not parsed or highlighted. It’s parsed as an ordinary string value with no special meaning.
-* [Liquid Drops](https://liquidjs.com/tutorials/drops.html) have no special meaning — not even the ones that are active by default. They’ll all be interpreted as ordinary identifiers (as they would be if the drop were not active). If you want special syntax highlighting, you can likely highlight them in your editor of choice via a `#match?` query.
+* [Jekyll’s custom tags](https://jekyllrb.com/docs/liquid/tags/) are not specifically implemented. Custom tags in general are supported, but this parser cannot reasonably know which custom tags are “paired” (like `{% highlight %}`/`{% endhighlight %}`) and which are “unpaired” (like `{% link news/index.html %}`, which has no corresponding `{% endlink %}` later in the file).
+
+    That means that built-in blocks — `for`, `if`, `unless`, etc. — are structured more usefully in the output than custom paired tags. The hypothetical `{% highlight %}` and `{% endhighlight %}` will each be recognized as its own unpaired tag, and they will have no formal or structured relationship to one another in the parse tree.
+
+* [Jekyll-like filenames](https://liquidjs.com/tags/render.html#Jekyll-like-Filenames) in `render` tags are not supported, nor are any other unquoted strings in tags.
+
+* Escape sequences are properly handled within strings, but [Liquid within Liquid strings](https://liquidjs.com/tags/render.html#Outputs-amp-Filters) is not parsed or highlighted. It’s parsed as an ordinary string value with no special meaning.
+
+* [Liquid Drops](https://liquidjs.com/tutorials/drops.html) are given no special meaning or node type — not even the ones that are active by default, like the special `forloop` identifier within a `{% for %}` block. They’ll all be interpreted as ordinary `identifier`s. If you want special syntax highlighting, you can likely highlight them in your editor of choice via a `#match?` query.
 
 [Tree-sitter]: https://tree-sitter.github.io/tree-sit
 [Liquid]: https://shopify.github.io/liquid/

@@ -1487,47 +1487,63 @@
                 "name": "elsif_directive"
               },
               {
-                "type": "CHOICE",
-                "members": [
-                  {
+                "type": "PREC_RIGHT",
+                "value": 6,
+                "content": {
+                  "type": "REPEAT",
+                  "content": {
                     "type": "SYMBOL",
                     "name": "_any"
-                  },
-                  {
-                    "type": "BLANK"
                   }
-                ]
+                }
               }
             ]
           }
         },
         {
-          "type": "REPEAT",
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "else_directive"
-              },
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "_any"
-                  },
-                  {
-                    "type": "BLANK"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "else_directive"
+                },
+                {
+                  "type": "PREC_RIGHT",
+                  "value": 8,
+                  "content": {
+                    "type": "REPEAT",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_any"
+                    }
                   }
-                ]
-              }
-            ]
-          }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
           "name": "endif_directive"
+        }
+      ]
+    },
+    "_if_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "if"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_expression"
         }
       ]
     },
@@ -1566,12 +1582,12 @@
         }
       ]
     },
-    "_if_statement": {
+    "_elsif_statement": {
       "type": "SEQ",
       "members": [
         {
           "type": "STRING",
-          "value": "if"
+          "value": "elsif"
         },
         {
           "type": "SYMBOL",
@@ -1611,19 +1627,6 @@
               "value": "-%}"
             }
           ]
-        }
-      ]
-    },
-    "_elsif_statement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "elsif"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "_expression"
         }
       ]
     },
@@ -1817,43 +1820,46 @@
                 "name": "elsif_directive"
               },
               {
-                "type": "CHOICE",
-                "members": [
-                  {
+                "type": "PREC_RIGHT",
+                "value": 6,
+                "content": {
+                  "type": "REPEAT",
+                  "content": {
                     "type": "SYMBOL",
                     "name": "_any"
-                  },
-                  {
-                    "type": "BLANK"
                   }
-                ]
+                }
               }
             ]
           }
         },
         {
-          "type": "REPEAT",
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "else_directive"
-              },
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "_any"
-                  },
-                  {
-                    "type": "BLANK"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "else_directive"
+                },
+                {
+                  "type": "PREC_RIGHT",
+                  "value": 8,
+                  "content": {
+                    "type": "REPEAT",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_any"
+                    }
                   }
-                ]
-              }
-            ]
-          }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
