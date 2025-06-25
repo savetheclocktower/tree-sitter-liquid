@@ -261,3 +261,56 @@ Comment directive
   (layout_directive file: (string))
   (content)
 )
+
+
+========================
+Custom directive
+========================
+
+{% smapdi 'hello.liquid', 4, true %}
+
+---
+
+(template
+  (content)
+  (custom_directive
+    tag: (identifier)
+    (parameters
+      (string)
+      (number)
+      (boolean)
+    )
+  )
+  (content)
+)
+
+
+============================
+Custom directive with filter
+============================
+
+{% smapdi 'hello.liquid' | upcase | prepend: 'something' %}
+
+---
+
+(template
+  (content)
+  (custom_directive
+    tag: (identifier)
+    (parameters
+      (filtered_value
+        operand: (filtered_value
+          operand: (string)
+          filter: (filter_expression
+            name: (identifier)
+          )
+        )
+        filter: (filter_expression
+          name: (identifier)
+          parameter: (string)
+        )
+      )
+    )
+  )
+  (content)
+)

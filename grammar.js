@@ -68,7 +68,8 @@ module.exports = grammar({
       $.decrement_directive,
       $.output_directive,
       $.layout_directive,
-      $.empty_directive
+      $.empty_directive,
+      $.custom_directive
     ),
 
     _any_liquid_statement: $ => choice(
@@ -84,6 +85,23 @@ module.exports = grammar({
       $.liquid_if_block,
       $.liquid_unless_block,
       $.liquid_tablerow_block
+    ),
+
+    custom_directive: $ => directive(
+      seq(
+        field('tag', $.identifier),
+        optional($.parameters)
+      )
+    ),
+
+    parameters: $ => seq(
+      $._value,
+      repeat(
+        seq(
+          optional(","),
+          $._value
+        )
+      )
     ),
 
     // A directive that starts like `{% #`, where only whitespace separates the

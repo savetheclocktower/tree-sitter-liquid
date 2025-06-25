@@ -210,6 +210,10 @@
           "named": true
         },
         {
+          "type": "custom_directive",
+          "named": true
+        },
+        {
           "type": "cycle_directive",
           "named": true
         },
@@ -338,6 +342,10 @@
           "named": true
         },
         {
+          "type": "custom_directive",
+          "named": true
+        },
+        {
           "type": "cycle_directive",
           "named": true
         },
@@ -457,6 +465,10 @@
         },
         {
           "type": "content",
+          "named": true
+        },
+        {
+          "type": "custom_directive",
           "named": true
         },
         {
@@ -596,6 +608,32 @@
     "type": "content",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "custom_directive",
+    "named": true,
+    "fields": {
+      "tag": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "parameters",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "cycle_directive",
@@ -916,6 +954,10 @@
           "named": true
         },
         {
+          "type": "custom_directive",
+          "named": true
+        },
+        {
           "type": "cycle_directive",
           "named": true
         },
@@ -1058,6 +1100,10 @@
         },
         {
           "type": "content",
+          "named": true
+        },
+        {
+          "type": "custom_directive",
           "named": true
         },
         {
@@ -2409,6 +2455,45 @@
     }
   },
   {
+    "type": "parameters",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "boolean",
+          "named": true
+        },
+        {
+          "type": "empty",
+          "named": true
+        },
+        {
+          "type": "filtered_value",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "selector_expression",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "range_expression",
     "named": true,
     "fields": {
@@ -2685,6 +2770,10 @@
           "named": true
         },
         {
+          "type": "custom_directive",
+          "named": true
+        },
+        {
           "type": "cycle_directive",
           "named": true
         },
@@ -2902,6 +2991,10 @@
           "named": true
         },
         {
+          "type": "custom_directive",
+          "named": true
+        },
+        {
           "type": "cycle_directive",
           "named": true
         },
@@ -2998,6 +3091,10 @@
         },
         {
           "type": "content",
+          "named": true
+        },
+        {
+          "type": "custom_directive",
           "named": true
         },
         {
