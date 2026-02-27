@@ -13,7 +13,7 @@
   "author": "Andrew Dupont",
   "license": "MIT",
   "devDependencies": {
-    "tree-sitter-cli": "^0.25.6"
+    "tree-sitter-cli": "^0.26.6"
   },
   "tree-sitter": [
     {
